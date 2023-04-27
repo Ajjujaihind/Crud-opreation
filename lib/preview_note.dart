@@ -1,9 +1,27 @@
+import 'package:crud/db_helper.dart';
+import 'package:crud/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
-class PreviewNote extends StatelessWidget {
+class PreviewNote extends StatefulWidget {
+  @override
+  State<PreviewNote> createState() => _PreviewNoteState();
+  var noteId;
+  var Title;
+  var Desc;
+
+  PreviewNote(this.noteId, this.Title, this.Desc);
+}
+
+class _PreviewNoteState extends State<PreviewNote> {
+  List<Map<String, dynamic>> Previewgetnote = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   var titlecontroller = TextEditingController();
+
   var messagecontroller = TextEditingController();
 
   @override
@@ -14,6 +32,8 @@ class PreviewNote extends StatelessWidget {
         actions: [
           InkWell(
               onTap: () {
+                titlecontroller.text = widget.Title;
+                messagecontroller.text = widget.Desc;
                 showModalBottomSheet(
                     context: context,
                     builder: (context) {
@@ -50,7 +70,18 @@ class PreviewNote extends StatelessWidget {
                               height: 10,
                             ),
                             ElevatedButton(
-                                onPressed: () {}, child: Text("Update"))
+                                onPressed: () {
+                                  var id = widget.noteId;
+                                  var title = titlecontroller.text.toString();
+                                  var desc = messagecontroller.text.toString();
+                                  Dbhelper().updatData(id, title, desc);
+
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) => HomePage())));
+                                },
+                                child: Text("Update"))
                           ],
                         ),
                         decoration: BoxDecoration(
@@ -66,10 +97,10 @@ class PreviewNote extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            "Title",
+            "${widget.Title}",
             style: TextStyle(fontSize: 35),
           ),
-          Text("Message"),
+          Text("${widget.Desc}"),
         ],
       ),
     );
